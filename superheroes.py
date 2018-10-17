@@ -1,15 +1,27 @@
 import random
 
 class Ability:
+    # variables protect function when parameters aren't passed
+    # is there a better way to protecc?
+    name = ''
+    attack_strength = 0
+
     def __init__(self, name, attack_strength):
-        self.attack_strength = attack_strength
+        """
+        attack strength =
+        random int between attack strength and half attack strength
+        random.randint(self.attack_strength // 2, self.attack_strength)
+        """
         self.name = name
+        min_pwr = int(attack_strength) // 2
+        self.attack_strength = random.randint(min_pwr, int(attack_strength))
+
 
     def attack(self):
         """
-        return attack value
+        return attack strength
         """
-        return random.randint(self.attack_strength // 2, self.attack_strength)
+        return self.attack_strength
 
     def update_attack(self, attack_strength):
         """
@@ -28,7 +40,7 @@ class Hero:
     deaths = 0
     kills = 0
 
-    def __init__(self, name):
+    def __init__(self, name, health=100):
         """
         Initialize starting values
         """
@@ -97,9 +109,9 @@ class Hero:
         """
         if self.health > 0:
             self.health -= damage
-            #
+        #
             if self.health <= 0:
-            self.deaths += 1
+                self.deaths += 1
             return 1
         #
         return 0
@@ -111,11 +123,26 @@ class Weapon(Ability):
         This method should should return a random value
         between 0 and the full attack power of the weapon.
         """
-        attack_power = randint(0, self.attack_strength)
-        return attack_power
+        attack_pwr = randint(0, self.attack_strength)
+        return attack_pwr
+
+class Armor:
+    name = ''
+    defense = 0
+
+    def __init__(self, name, defense):
+        self.name = name
+        self.defense = int(defense)
+
+    def defense(self):
+        return randint(0,self.defense)
+
 
 class Team:
-    def init(self, team_name):
+    name = ''
+    heroes = list()
+
+    def __init__(self, team_name):
         self.name = team_name
         self.heroes = list()
 
@@ -128,9 +155,12 @@ class Team:
     def remove_hero(self, name):
         """
         Remove hero from heroes list.
-        If Hero isn't found return 0.
+        Checks to see if hero exists.
+        If hero isn't found return 0.
         """
-        self.heroes.remove(Hero)
+        # guesss: self.heroes.remove(Hero)
+        for hero in self.heroes:
+            if hero.name == name:
 
     def find_hero(self, name):
         """
