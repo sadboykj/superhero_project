@@ -1,34 +1,5 @@
 import random
 
-class Ability:
-    # variables protect function when parameters aren't passed
-    # is there a better way to protecc?
-    name = ''
-    attack_strength = 0
-
-    def __init__(self, name, attack_strength):
-        """
-        attack strength =
-        random int between attack strength and half attack strength
-        random.randint(self.attack_strength // 2, self.attack_strength)
-        """
-        self.name = name
-        min_pwr = int(attack_strength) // 2
-        self.attack_strength = random.randint(min_pwr, int(attack_strength))
-
-
-    def attack(self):
-        """
-        return attack strength
-        """
-        return self.attack_strength
-
-    def update_attack(self, attack_strength):
-        """
-        update attack value
-        """
-        self.attack_strength = attack_strength
-
 class Hero:
     #
     name = ''
@@ -39,7 +10,7 @@ class Hero:
     health = 0
     deaths = 0
     kills = 0
-
+    #
     def __init__(self, name, health=100):
         """
         Initialize starting values
@@ -91,7 +62,7 @@ class Hero:
 
     def defend(self):
         """
-        Calculate defense power
+        Calculates then returns defense power
         """
         defense_pwr = 0
         #
@@ -113,9 +84,38 @@ class Hero:
         #
             if self.health <= 0:
                 self.deaths += 1
-            return 1
+            return -1
         #
         return 0
+
+
+class Ability:
+    # variables protect function when parameters aren't passed
+    # is there a better way to protecc?
+    name = ''
+    attack_strength = 0
+    #
+    def __init__(self, name, attack_strength):
+        """
+        attack strength =
+        random int between attack strength and half attack strength
+        random.randint(self.attack_strength // 2, self.attack_strength)
+        """
+        self.name = name
+        min_pwr = int(attack_strength) // 2
+        self.attack_strength = random.randint(min_pwr, int(attack_strength))
+
+    def attack(self):
+        """
+        return attack strength
+        """
+        return self.attack_strength
+
+    def update_attack(self, attack_strength):
+        """
+        update attack value
+        """
+        self.attack_strength = attack_strength
 
 
 class Weapon(Ability):
@@ -127,22 +127,28 @@ class Weapon(Ability):
         attack_pwr = randint(0, self.attack_strength)
         return attack_pwr
 
+
 class Armor:
     name = ''
     defense = 0
-
+    #
     def __init__(self, name, defense):
         self.name = name
         self.defense = int(defense)
 
     def defense(self):
-        return randint(0,self.defense)
+        """
+        This method should should return a random value
+        between 0 and the full attack power of the weapon.
+        """
+        defense_pwr = randint(0, self.defense)
+        return defense_pwr
 
 
 class Team:
     name = ''
     heroes = list()
-
+    #
     def __init__(self, team_name):
         self.name = team_name
         self.heroes = list()
@@ -200,15 +206,58 @@ class Team:
         attack_pwr = 0
         for hero in self.heroes:
             attack_pwr += hero.attack()
-        kills = target.defend(attack_pwr)
+        #
+        killCheck = target.defend(attack_pwr)
+        self.update_kills(killCheck)
 
-    def defend(self, damage):
+    def defend(self, dmg):
         """
         Disperses damage
         """
+        # damage = dmg
         defense_pwr = 0
+        kills = 0
+        for hero in self.heroes:
+            defense_pwr += hero.defend()
+        #
+        damage = dmg - defense_pwr
+        self.deal_damage(damage)
+        #
+        dmg_piece = damage // len(self.heroes)
+        if damage > 0:
+            for hero in self.heroes:
+                dead = hero.take_damage(dmg_piece)
+                if dead == -1:
+                    kills += 1
+        #
+        return kills
 
+    def deal_damage(self, dmg):
+        """
+        Disperses damage to target team
+        """
+        deaths = 0
+        if dmg > 0:
+            dmg_piece = dmg // len(self.heroes)
+            for hero in self.heroes:
+                dead = hero.take_damage(dmg_piece)
+                if dead == -1:
+                    deaths += 1
+        #
+        return deaths
 
+    def stats(self):
+        """
+
+        """
+        for hero in hero
+
+    def check_heroes(self):
+        for hero in self.heroes:
+            if hero.health > 0:
+                return True
+        #
+        return False
 
 class Arena:
     def __init__(self):
