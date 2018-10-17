@@ -1,94 +1,118 @@
-# using randint() operator
-# use // division for only integers
 import random
-
-class Hero:
-    def __init__(self, name):
-        # name
-        self.name = name
-        #
-        # ability list
-        self.abilities = list()
-        # amor list
-        self.amors = list()
-        #
-        self.start_health = health
-        self.health = health
-        self.deaths = 0
-        self.kills = 0
-
-    # str returns string representation
-    # works like .format
-    def __str__(self):
-        return self.name
-
-    def add_ability(self, ability):
-        # add ability to ability list
-        self.abilities.append(ability)
-
-    def attack(self):
-        # initialize attack sum and power sum
-        power = 0
-        # power_sum = 0
-        # count how many abilities hero has
-        for ability in self.abilities:
-            power += ability.attack()
-            # power_sum += number_of.attack_strength()
-        # return the number of abilities
-        return (power)
-        # return (power_sum)
-        # prints number of abilities
-        # print(len(self.abilities))
-
-    def defend(self):
-        defense = 0
-
-        if len(self.amors) == 0:
-            return 0
-
-        for power_of in self.armors:
-            # defense = defense + powerOf.defense
-            defense += power_of.defend()
-
-        if self.health == 0:
-            defense = 0
-            return defense
-        else:
-            return defense
 
 class Ability:
     def __init__(self, name, attack_strength):
-        # set ability name
-        self.name = name
-        #
-        # set attack strength
         self.attack_strength = attack_strength
+        self.name = name
 
     def attack(self):
-        # calculate lowest and highest attack value
-        # self.attack_strength = attack_strength
-        # low = 0
-        # high = attack_strength * 2
-        #
-        low = self.attack_strength // 2
-        high = self.attack_strength
-        #
-        # use random.randint(a,b) to select attack values
-        power = random.randint(low, high)
-        #
-        # return attack value between 0 and the full attack
-        return (power)
+        """
+        return attack value
+        """
+        return random.randint(self.attack_strength // 2, self.attack_strength)
 
     def update_attack(self, attack_strength):
-        # update attck values
+        """
+        update attack value
+        """
         self.attack_strength = attack_strength
+
+class Hero:
+    #
+    name = ''
+    abilities = list()
+    weapons = list()
+    armors = list()
+    start_health = 0
+    health = 0
+    deaths = 0
+    kills = 0
+
+    def __init__(self, name):
+        """
+        Initialize starting values
+        """
+        self.abilities = list()
+        self.name = name
+        #
+        self.weapons = list()
+        self.armors = list()
+        self.start_health = int(health)
+        self.health = int(health)
+        self.deaths = 0
+        self.kills = 0
+
+    def add_ability(self, ability):
+        """
+        Add ability to abilities list
+        """
+        self.abilities.append(ability)
+
+    def add_armor(self, armor):
+        """
+        Add armor to armor list
+        """
+        self.armor.append(armor)
+
+    def add_weapon(self, weapon):
+        """
+        Add weapon to weapon list
+        """
+        self.weapon.append(weapon)
+
+    def attack(self):
+        """
+        Run attack() on every ability hero has
+        """
+        attack_pwr = 0
+        #
+        if self.health <= 0:
+            return 0
+        #
+        for ability in self.abilities:
+            attack_pwr += ability.attack()
+        #
+        for weapon in self.weapons:
+            attack_pwr += weapon.attack()
+        #
+        return attack_pwr
+
+    def defend(self):
+        """
+        Calculate defense power
+        """
+        defense_pwr = 0
+        #
+        if self.health <= 0:
+            return 0
+        #
+        for armor in self.armors:
+            defense_pwr += amor.defend()
+        #
+        return defense_pwr
+
+    def take_damage(self, damage):
+        """
+        Calculate defense power
+        """
+        if self.health > 0:
+            self.health -= damage
+            #
+            if self.health <= 0:
+            self.deaths += 1
+            return 1
+        #
+        return 0
+
 
 class Weapon(Ability):
     def attack(self):
-        # returns random value
-        # attack power is inherited
-        power = random.randint(0, self.attack_strength)
-        print(power)
+        """
+        This method should should return a random value
+        between 0 and the full attack power of the weapon.
+        """
+        attack_power = randint(0, self.attack_strength)
+        return attack_power
 
 class Team:
     def init(self, team_name):
@@ -96,41 +120,61 @@ class Team:
         self.heroes = list()
 
     def add_hero(self, Hero):
-        # add hero object to list of heroes
+        """
+        Add Hero object to heroes list.
+        """
         self.heroes.append(Hero)
 
-
     def remove_hero(self, name):
-        # remove hero from listen
-        # if hero isnt found return zero
-        # to remove all heroes:
-        # self.heroes.clear()
-        # or del self.heroes[:]
-        # .remove removes the first matching value
-        # del[] and .pop remove the index
-        # but .pop also returns it
-        
-
-
+        """
+        Remove hero from heroes list.
+        If Hero isn't found return 0.
+        """
+        self.heroes.remove(Hero)
 
     def find_hero(self, name):
-        # find and return hero from list
-        # if hero isnt found return zero
+        """
+        Find and return hero from heroes list.
+        If Hero isn't found return 0.
+        """
+        if (self.heroes.find(Hero)):
+            return Hero
+        else:
+            return 0
 
     def view_all_heroes(self):
-        # print out all heroes
-        print self.heroes
+        """Print out all heroes to the console."""
+        print(self.heroes)
 
+class Arena:
+    def __init__(self):
+        self.team_one = None
+        self.team_two = None
 
-# class Amor:
-#     def __init__(self, name, defense):
-#         # name
-#         self.name = name
-#         # defense
-#         self.defense = defense
-#
-#     def defend(self):
-#
+    def build_team_one(self):
+        """
+        This method should allow a user to build team one.
+        """
+        self.team_one = Team('Avengers')
+
+    def build_team_two(self):
+        """
+        This method should allow user to build team two.
+        """
+        self.team_two = Team('Evil League of EVIL')
+
+    def team_battle(self):
+        """
+        This method should continue to battle teams until
+        one or both teams are dead.
+        """
+
+    def show_stats(self):
+        """
+        This method should print out the battle statistics
+        including each heroes kill/death ratio.
+        """
+
 
 if __name__ == "__main__":
     hero = Hero("Wonder Woman")
