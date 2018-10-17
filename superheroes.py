@@ -248,9 +248,18 @@ class Team:
 
     def stats(self):
         """
-
+        Lists out hero kills
         """
-        for hero in hero
+        for hero in self.heroes:
+            print("{}:\nKills: {}\nDeaths: {}".format(
+            hero.name, hero.kills, hero.deaths))
+
+    def revive_heroes(self, health=100):
+        """
+        Resets heroes health
+        """
+        for hero in self.heroes:
+            hero.health = hero.start_health
 
     def check_heroes(self):
         for hero in self.heroes:
@@ -259,22 +268,61 @@ class Team:
         #
         return False
 
+    def update_kills(self, kills):
+        for hero in self.heroes:
+            hero.add_kill(kills)
+
 class Arena:
+    team_one = None
+    team_two = None
+    #
     def __init__(self):
         self.team_one = None
         self.team_two = None
 
-    def build_team_one(self):
+    def build_team(self, team):
         """
-        This method should allow a user to build team one.
+        This method should allow a user to build a team.
         """
-        self.team_one = Team('Avengers')
+        team_name = str(input('enter name for Team {}:'.format(team)))
+        team = Team(team_name)
+        add_heroes = True
+        hero_count = 1
+        #
+        while add_heroes:
+            name = str(input('enter name for hero {}:'.format(hero_count)))
+            health = str(input('enter health for {}: default(100) '.format(name)))
+            hero = Hero(name, health)
+            #
+            add_abilities = str(input('does {} have abilities? yes or no'.format(name)))
+            if add_abilites.lower() == 'yes':
+                have_abilities = True
+            elif add_abilities.lower() == 'no':
+                have_abilities = False
+            #
+            while have_abilities:
+                ab_name = str(input('enter the name of ability: '))
+                ab_pwr = str(input('enter the power of {} - integer'.format(ab_name)))
+                ability = Ability(ab_name, ab_pwr)
+                hero.add_ability(ability)
+                more = str(input('does {} have any other abilities? yes or no'.format(name)))
+                if more.lower() == 'no':
+                    add_weapons = False
 
-    def build_team_two(self):
-        """
-        This method should allow user to build team two.
-        """
-        self.team_two = Team('Evil League of EVIL')
+                wpn_name = str(input('does {} have any weapons?: '.format(name)))
+                wpn_pwr = str(input('enter the power of {} - integer'.format(ab_name)))
+                ability = Ability(ab_name, ab_pwr)
+                hero.add_ability(ability)
+                more = str(input('does {} have any other abilities? yes or no'.format(name)))
+                if more.lower() == 'no':
+                    add_weapons = False
+
+
+    # def build_team_two(self):
+    #     """
+    #     This method should allow user to build team two.
+    #     """
+    #     self.team_two = Team('Evil League of EVIL')
 
     def team_battle(self):
         """
@@ -288,6 +336,10 @@ class Arena:
         including each heroes kill/death ratio.
         """
 
+    def reset(self):
+        self.team_one.revive_heroes()
+        self.team_two.revive_heroes()
+        self.team_battle()
 
 if __name__ == "__main__":
     hero = Hero("Wonder Woman")
