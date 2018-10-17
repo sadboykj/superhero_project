@@ -105,7 +105,8 @@ class Hero:
 
     def take_damage(self, damage):
         """
-        Calculate defense power
+        Calculates defense power
+        Returns 1 for death
         """
         if self.health > 0:
             self.health -= damage
@@ -154,27 +155,60 @@ class Team:
 
     def remove_hero(self, name):
         """
+        Run through hero list to check if hero exists.
         Remove hero from heroes list.
-        Checks to see if hero exists.
         If hero isn't found return 0.
         """
         # guesss: self.heroes.remove(Hero)
+        index = 0
         for hero in self.heroes:
             if hero.name == name:
+                self.heroes.pop(index)
+                # return none in order to stop function
+                return None
+            index += 1
+        #
+        return 0
+
 
     def find_hero(self, name):
         """
         Find and return hero from heroes list.
         If Hero isn't found return 0.
         """
-        if (self.heroes.find(Hero)):
-            return Hero
-        else:
-            return 0
+        # guess:
+        # if (self.heroes.find(Hero)):
+        #     return Hero
+        # else:
+        #     return 0
+        for hero in self.heroes:
+            if hero.name == name:
+                return hero
 
     def view_all_heroes(self):
-        """Print out all heroes to the console."""
-        print(self.heroes)
+        """
+        Print out all heroes to the console.
+        """
+        for hero in self.heroes:
+            print(hero.name)
+
+    def attack(self, target):
+        """
+        Sum total of each hero's attack power
+        Counts kills
+        """
+        attack_pwr = 0
+        for hero in self.heroes:
+            attack_pwr += hero.attack()
+        kills = target.defend(attack_pwr)
+
+    def defend(self, damage):
+        """
+        Disperses damage
+        """
+        defense_pwr = 0
+
+
 
 class Arena:
     def __init__(self):
