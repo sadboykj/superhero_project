@@ -1,4 +1,6 @@
 import random
+# got os from Luc
+import os
 
 class Hero:
     #
@@ -35,13 +37,13 @@ class Hero:
         """
         Add armor to armor list
         """
-        self.armor.append(armor)
+        self.armors.append(armor)
 
     def add_weapon(self, weapon):
         """
         Add weapon to weapon list
         """
-        self.weapon.append(weapon)
+        self.weapons.append(weapon)
 
     def attack(self):
         """
@@ -69,8 +71,8 @@ class Hero:
         if self.health <= 0:
             return 0
         #
-        for armor in self.armors:
-            defense_pwr += amor.defend()
+        for a in self.armors:
+            defense_pwr += a.defense()
         #
         return defense_pwr
 
@@ -87,6 +89,9 @@ class Hero:
             return -1
         #
         return 0
+
+    def add_kill(self, num_kills):
+        self.kills += num_kills
 
 
 class Ability:
@@ -281,72 +286,113 @@ class Arena:
         self.team_two = None
 
     def build_team(self, team):
-        """
-        This method should allow a user to build a team.
-        """
-        team_name = str(input('enter name for Team {}:'.format(team)))
+        team_name = user_input('Enter name for team {}: '.format(team))
         team = Team(team_name)
         add_heroes = True
         hero_count = 1
-        #
+
         while add_heroes:
-            name = str(input('enter name for hero {}:'.format(hero_count)))
-            health = str(input('enter health for {}: default(100) '.format(name)))
+            name = user_input('Enter name for hero {}: '.format(hero_count))
+            health = user_input('Enter health for {}: default(100) '.format(name))
+
             hero = Hero(name, health)
-            #
-            add_abilities = str(input('does {} have abilities? yes or no'.format(name)))
-            if add_abilites.lower() == 'yes':
+
+            add_ab = user_input('Add abilities to {}? (y/n) '.format(name))
+            if add_ab.lower() == 'y':
                 have_abilities = True
-            elif add_abilities.lower() == 'no':
+            elif add_ab.lower() == 'n':
                 have_abilities = False
-            #
             while have_abilities:
-                ab_name = str(input('enter the name of ability: '))
-                ab_pwr = str(input('enter the power of {} - integer'.format(ab_name)))
-                ability = Ability(ab_name, ab_pwr)
+                ab_name = user_input('Enter name for ability: ')
+                ab_power = user_input('Enter power for {}: '.format(ab_name))
+                ability = Ability(ab_name, ab_power)
                 hero.add_ability(ability)
-                more = str(input('does {} have any other abilities? yes or no'.format(name)))
-                if more.lower() == 'no':
-                    add_weapons = False
+                add_another = user_input('Add another ability to {}? (y/n) '.format(name))
+                if add_another.lower() == 'n':
+                    have_abilities = False
 
-                wpn_name = str(input('does {} have any weapons?: '.format(name)))
-                wpn_pwr = str(input('enter the power of {} - integer'.format(ab_name)))
-                ability = Ability(ab_name, ab_pwr)
-                hero.add_ability(ability)
-                more = str(input('does {} have any other abilities? yes or no'.format(name)))
-                if more.lower() == 'no':
-                    add_weapons = False
+            add_wp = user_input('Add weapons to {}? (y/n) '.format(name))
+            if add_wp.lower() == 'y':
+                have_weapons = True
+            elif add_wp.lower() == 'n':
+                have_weapons = False
+            while have_weapons:
+                wp_name = user_input('Enter name for weapon: ')
+                wp_power = user_input('Enter power for {}: '.format(wp_name))
+                weapon = Weapon(wp_name, wp_power)
+                hero.add_weapon(weapon)
+                add_another = user_input('Add another weapon to {}? (y/n) '.format(name))
+                if add_another.lower() == 'n':
+                    have_weapons = False
+
+            add_ar = user_input('Add armor to {}? (y/n) '.format(name))
+            if add_ar.lower() == 'y':
+                have_armor = True
+            elif add_ar.lower() == 'n':
+                have_armor = False
+            while have_armor:
+                ar_name = user_input('Enter name for armor: ')
+                ar_power = user_input('Enter power defense for {}: '.format(ar_name))
+                armor = Armor(ar_name, ar_power)
+                hero.add_armor(armor)
+                add_another = user_input('Add more armor to {}? (y/n) '.format(name))
+                if add_another.lower() == 'n':
+                    have_armor = False
 
 
+            team.add_hero(hero)
+            hero_count += 1
+            print('Created {} as a hero for team {}.'.format(name, team_name))
+            add_another = user_input('Add another hero to team {}? (y/n) '.format(team_name))
+            if add_another.lower() == 'n':
+                    add_heroes = False
+
+        return team
+
+    # def build_team_one(self):
+    #
     # def build_team_two(self):
-    #     """
-    #     This method should allow user to build team two.
-    #     """
-    #     self.team_two = Team('Evil League of EVIL')
 
     def team_battle(self):
-        """
-        This method should continue to battle teams until
-        one or both teams are dead.
-        """
+        teams_alive = True
+        while teams_alive:
+            team_one_alive = self.team_one.check_heroes()
+            team_two_alive = self.team_two.check_heroes()
+
+            if team_one_alive and team_two_alive:
+                self.team_one.attack(self.team_two)
+                self.team_two.attack(self.team_one)
+            else:
+                teams_alive = False
+
+        self.show_stats()
+        print('\n\n')
+        reset = user_input('Run simulation again? (y/n): ')
+        if reset.lower() == 'y':
+            self.reset()
 
     def show_stats(self):
-        """
-        This method should print out the battle statistics
-        including each heroes kill/death ratio.
-        """
+        print('{} statistics:\n\n'.format(self.team_one.name))
+        self.team_one.stats()
 
-    def reset(self):
-        self.team_one.revive_heroes()
-        self.team_two.revive_heroes()
-        self.team_battle()
+        print('__________________________________________________')
+
+        print('{} statistics:\n\n'.format(self.team_two.name))
+        self.team_two.stats()
+
+
+def user_input(prompt):
+    try:
+        user_input = input(prompt)
+        os.system('cls' if os.name == 'nt' else 'clear')
+        return user_input
+
+    except EOFError:
+        return ''
+
 
 if __name__ == "__main__":
-    hero = Hero("Wonder Woman")
-    print(hero.attack())
-    ability = Ability("Divine Speed", 300)
-    hero.add_ability(ability)
-    print(hero.attack())
-    new_ability = Ability("Super Human Strength", 800)
-    hero.add_ability(new_ability)
-    print(hero.attack())
+    arena = Arena()
+    arena.team_one = arena.build_team(1)
+    arena.team_two = arena.build_team(2)
+    arena.team_battle()

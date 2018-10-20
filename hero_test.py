@@ -5,7 +5,6 @@ import superheroes
 
 # Helper Function
 
-
 def capture_console_output(function_body):
     # _io.StringIO object
     string_io = io.StringIO()
@@ -15,7 +14,6 @@ def capture_console_output(function_body):
     return string_io.getvalue()
 
 # Test Abilities Class
-
 
 def test_ability_instance():
     # Test instantiation without error
